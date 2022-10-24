@@ -78,12 +78,8 @@ public class EnemyMovement : MonoBehaviour
             }
             else
             {
-                _animator.SetFloat("y", Mathf.SmoothStep(_animator.GetFloat("y"),0f, stepTime));
+                _animator.SetFloat("y", Mathf.SmoothStep(_animator.GetFloat("y"),0f, 2f));
                 _animator.SetFloat("x", Mathf.SmoothStep(_animator.GetFloat("x"),xMove,stepTime));
-            }
-
-            if (!isFacing)
-            {
                 if (dotProd > angle)
                 {
                     _animator.SetFloat("x", Mathf.SmoothStep(_animator.GetFloat("x"),0f, stepTime));
