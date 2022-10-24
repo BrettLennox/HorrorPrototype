@@ -22,6 +22,7 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private float angle = 0.9f;
     [SerializeField] private float yMove = 0.5f;
     [SerializeField] private float xMove = 1f;
+    [SerializeField] private float dampTime = 1f;
 
     private bool shouldMove = true;
     // Start is called before the first frame update
@@ -67,29 +68,49 @@ public class EnemyMovement : MonoBehaviour
                 }
             }
 
-            if (isFacing)
+            if (dotProd > angle)
             {
-                _animator.SetFloat("y", Mathf.SmoothStep(_animator.GetFloat("y"), yMove, stepTime));
-                _animator.SetFloat("x", Mathf.SmoothStep(_animator.GetFloat("x"),0f, stepTime));
-                if (dotProd < 0.5f)
-                {
-                    isFacing = false;
-                }
+                isFacing = true;
             }
             else
             {
-                _animator.SetFloat("y", Mathf.SmoothStep(_animator.GetFloat("y"),0f, 2f));
-                _animator.SetFloat("x", Mathf.SmoothStep(_animator.GetFloat("x"),xMove,stepTime));
-                if (dotProd > angle)
-                {
-                    _animator.SetFloat("x", Mathf.SmoothStep(_animator.GetFloat("x"),0f, stepTime));
-                    isFacing = true;
-                }
-                else
-                {
-                    _animator.SetFloat("x", Mathf.SmoothStep(_animator.GetFloat("x"),xMove, stepTime));
-                }
+                isFacing = false;
             }
+
+            if (isFacing)
+            {
+                _animator.SetFloat("y", yMove, dampTime,Time.deltaTime);
+                _animator.SetFloat("x", 0f, dampTime, Time.deltaTime);
+            }
+            else
+            {
+                _animator.SetFloat("y", 0f, dampTime, Time.deltaTime);
+                _animator.SetFloat("x", xMove, dampTime, Time.deltaTime);
+            }
+
+            //if (isFacing)
+            //{
+            //    _animator.SetFloat("y", Mathf.SmoothStep(_animator.GetFloat("y"), 1f, stepTime));
+            //    _animator.SetFloat("x", Mathf.SmoothStep(_animator.GetFloat("x"),0f, stepTime));
+            //    if (dotProd < 0.5f)
+            //    {
+            //        isFacing = false;
+            //    }
+            //}
+            //else
+            //{
+            //    _animator.SetFloat("y", Mathf.SmoothStep(_animator.GetFloat("y"),0.5f, 2f));
+            //    _animator.SetFloat("x", Mathf.SmoothStep(_animator.GetFloat("x"),1f,stepTime));
+            //    if (dotProd > angle)
+            //    {
+            //        _animator.SetFloat("x", Mathf.SmoothStep(_animator.GetFloat("x"),0f, stepTime));
+            //        isFacing = true;
+            //    }
+            //    else
+            //    {
+            //        _animator.SetFloat("x", Mathf.SmoothStep(_animator.GetFloat("x"),xMove, stepTime));
+            //    }
+            //}
         }
         else if(!shouldMove && Vector3.Distance(transform.position, _movePosition.position) > 0.5f)
         {
